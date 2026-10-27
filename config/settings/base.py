@@ -359,15 +359,10 @@ LOW_STOCK_NOTIFICATION_EMAILS = config(
 
 
 # Paystack credentials: consumed by the payments app later.
-PAYSTACK_PUBLIC_KEY = config(
-    "PAYSTACK_PUBLIC_KEY",
-    default="",
+PAYSTACK_CALLBACK_URL = config(
+    "PAYSTACK_CALLBACK_URL",
+    default=f"{FRONTEND_BASE_URL}/payment/callback",
 )
-PAYSTACK_SECRET_KEY = config(
-    "PAYSTACK_SECRET_KEY",
-    default="",
-)
-PAYSTACK_WEBHOOK_SECRET = config(
-    "PAYSTACK_WEBHOOK_SECRET",
-    default="",
-)
+
+PAYSTACK_SECRET_KEY = config("PAYSTACK_SECRET_KEY", default="")
+PAYSTACK_PUBLIC_KEY = config("PAYSTACK_PUBLIC_KEY", default="")
