@@ -10,6 +10,11 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
 )
 
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularRedocView,
+    SpectacularSwaggerView,
+)
 
 class HealthCheckView(APIView):
     """Basic application health endpoint."""
@@ -23,6 +28,9 @@ class HealthCheckView(APIView):
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("api/", include("users.urls")),
+    path("api/", include("products.urls")),
+    path("api/", include("orders.urls")),
 
     path("api/v1/health/", HealthCheckView.as_view(), name="health-check"),
 
@@ -40,5 +48,17 @@ urlpatterns = [
         "api/v1/auth/token/verify/",
         TokenVerifyView.as_view(),
         name="token-verify",
+    ),
+    
+    path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
+    path(
+        "api/docs/",
+        SpectacularSwaggerView.as_view(url_name="schema"),
+        name="swagger-ui",
+    ),
+    path(
+        "api/redoc/",
+        SpectacularRedocView.as_view(url_name="schema"),
+        name="redoc",
     ),
 ]

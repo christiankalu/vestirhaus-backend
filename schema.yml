@@ -1,0 +1,2379 @@
+openapi: 3.0.3
+info:
+  title: Vestirhaus API
+  version: 1.0.0
+  description: REST API for the Vestirhaus multi-gender fashion platform.
+paths:
+  /api/auth/forgot-password/:
+    post:
+      operationId: auth_forgot_password_create
+      description: |-
+        Calls Django Auth PasswordResetForm save method.
+
+        Accepts the following POST parameters: email
+        Returns the success/fail message.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordReset'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PasswordReset'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PasswordReset'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PasswordReset'
+          description: ''
+  /api/auth/login/:
+    post:
+      operationId: auth_login_create
+      description: |-
+        Check the credentials and return the REST Token
+        if the credentials are valid and authenticated.
+        Calls Django Auth login method to register User ID
+        in Django session framework
+
+        Accept the following POST parameters: username, password
+        Return the REST Framework Token Object's key.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomLogin'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CustomLogin'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CustomLogin'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomLogin'
+          description: ''
+  /api/auth/logout/:
+    get:
+      operationId: auth_logout_retrieve
+      description: |-
+        Calls Django logout method and delete the Token object
+        assigned to the current User object.
+
+        Accepts/Returns nothing.
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogoutSchema'
+          description: ''
+    post:
+      operationId: auth_logout_create
+      description: |-
+        Calls Django logout method and delete the Token object
+        assigned to the current User object.
+
+        Accepts/Returns nothing.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LogoutSchema'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LogoutSchema'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LogoutSchema'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogoutSchema'
+          description: ''
+  /api/auth/register/:
+    post:
+      operationId: auth_register_create
+      description: |-
+        Registers a new user.
+
+        Accepts the following POST parameters: username, email, password1, password2.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomRegister'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CustomRegister'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CustomRegister'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomRegister'
+          description: ''
+  /api/auth/reset-password/:
+    post:
+      operationId: auth_reset_password_create
+      description: |-
+        Password reset e-mail link is confirmed, therefore
+        this resets the user's password.
+
+        Accepts the following POST parameters: token, uid,
+            new_password1, new_password2
+        Returns the success/fail message.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordResetConfirm'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PasswordResetConfirm'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PasswordResetConfirm'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PasswordResetConfirm'
+          description: ''
+  /api/auth/token/refresh/:
+    post:
+      operationId: auth_token_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+        required: true
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /api/auth/verify-email/:
+    post:
+      operationId: auth_verify_email_create
+      description: |-
+        Verifies the email associated with the provided key.
+
+        Accepts the following POST parameter: key.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyEmail'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/VerifyEmail'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/VerifyEmail'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyEmail'
+          description: ''
+  /api/categories/:
+    get:
+      operationId: categories_list
+      description: Public category tree with admin-only catalogue management.
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - categories
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCategoryTreeList'
+          description: ''
+    post:
+      operationId: categories_create
+      description: Public category tree with admin-only catalogue management.
+      tags:
+      - categories
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryWrite'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CategoryWrite'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CategoryWrite'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryWrite'
+          description: ''
+  /api/categories/{slug}/:
+    get:
+      operationId: categories_retrieve
+      description: Public category tree with admin-only catalogue management.
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - categories
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryTree'
+          description: ''
+    put:
+      operationId: categories_update
+      description: Public category tree with admin-only catalogue management.
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - categories
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryWrite'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CategoryWrite'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CategoryWrite'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryWrite'
+          description: ''
+    patch:
+      operationId: categories_partial_update
+      description: Public category tree with admin-only catalogue management.
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - categories
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCategoryWrite'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCategoryWrite'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCategoryWrite'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryWrite'
+          description: ''
+    delete:
+      operationId: categories_destroy
+      description: Public category tree with admin-only catalogue management.
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - categories
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/product-images/:
+    get:
+      operationId: product_images_list
+      description: Administrative product-image CRUD.
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - product-images
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedProductImageList'
+          description: ''
+    post:
+      operationId: product_images_create
+      description: Administrative product-image CRUD.
+      tags:
+      - product-images
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductImage'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProductImage'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProductImage'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductImage'
+          description: ''
+  /api/product-images/{id}/:
+    get:
+      operationId: product_images_retrieve
+      description: Administrative product-image CRUD.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this product image.
+        required: true
+      tags:
+      - product-images
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductImage'
+          description: ''
+    put:
+      operationId: product_images_update
+      description: Administrative product-image CRUD.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this product image.
+        required: true
+      tags:
+      - product-images
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductImage'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProductImage'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProductImage'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductImage'
+          description: ''
+    patch:
+      operationId: product_images_partial_update
+      description: Administrative product-image CRUD.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this product image.
+        required: true
+      tags:
+      - product-images
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProductImage'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedProductImage'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedProductImage'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductImage'
+          description: ''
+    delete:
+      operationId: product_images_destroy
+      description: Administrative product-image CRUD.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this product image.
+        required: true
+      tags:
+      - product-images
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/products/:
+    get:
+      operationId: products_list
+      description: Public read-only catalogue; admin-only product mutations.
+      parameters:
+      - in: query
+        name: audience
+        schema:
+          type: string
+          enum:
+          - kids
+          - men
+          - unisex
+          - women
+        description: |-
+          * `men` - Men
+          * `women` - Women
+          * `kids` - Kids
+          * `unisex` - Unisex
+      - in: query
+        name: category
+        schema:
+          type: string
+      - in: query
+        name: color
+        schema:
+          type: string
+      - in: query
+        name: in_stock
+        schema:
+          type: boolean
+      - in: query
+        name: max_price
+        schema:
+          type: number
+        description: Maximum effective price in kobo.
+      - in: query
+        name: min_price
+        schema:
+          type: number
+        description: Minimum effective price in kobo.
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: size
+        schema:
+          type: string
+      - in: query
+        name: sort
+        schema:
+          type: string
+          enum:
+          - newest
+          - popularity
+          - price_asc
+          - price_desc
+        description: Catalogue sort option.
+      tags:
+      - products
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedProductListList'
+          description: ''
+    post:
+      operationId: products_create
+      description: Public read-only catalogue; admin-only product mutations.
+      tags:
+      - products
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductWrite'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProductWrite'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProductWrite'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductWrite'
+          description: ''
+  /api/products/{slug}/:
+    get:
+      operationId: products_retrieve
+      description: Public read-only catalogue; admin-only product mutations.
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - products
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDetail'
+          description: ''
+    put:
+      operationId: products_update
+      description: Public read-only catalogue; admin-only product mutations.
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - products
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductWrite'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProductWrite'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProductWrite'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductWrite'
+          description: ''
+    patch:
+      operationId: products_partial_update
+      description: Public read-only catalogue; admin-only product mutations.
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - products
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProductWrite'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedProductWrite'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedProductWrite'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductWrite'
+          description: ''
+    delete:
+      operationId: products_destroy
+      description: Public read-only catalogue; admin-only product mutations.
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - products
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/products/{slug}/reviews/:
+    get:
+      operationId: products_reviews_retrieve
+      description: Public read-only catalogue; admin-only product mutations.
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - products
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewRead'
+          description: ''
+    post:
+      operationId: products_reviews_create
+      description: Public read-only catalogue; admin-only product mutations.
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - products
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ReviewCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ReviewCreate'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewCreate'
+          description: ''
+  /api/products/featured/:
+    get:
+      operationId: products_featured_retrieve
+      description: Public read-only catalogue; admin-only product mutations.
+      tags:
+      - products
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductList'
+          description: ''
+  /api/users/me/:
+    get:
+      operationId: users_me_retrieve
+      description: |-
+        Reads and updates UserModel fields
+        Accepts GET, PUT, PATCH methods.
+
+        Default accepted fields: username, first_name, last_name
+        Default display fields: pk, username, email, first_name, last_name
+        Read-only fields: pk, email
+
+        Returns UserModel fields.
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDetails'
+          description: ''
+    put:
+      operationId: users_me_update
+      description: |-
+        Reads and updates UserModel fields
+        Accepts GET, PUT, PATCH methods.
+
+        Default accepted fields: username, first_name, last_name
+        Default display fields: pk, username, email, first_name, last_name
+        Read-only fields: pk, email
+
+        Returns UserModel fields.
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDetails'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserDetails'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserDetails'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDetails'
+          description: ''
+    patch:
+      operationId: users_me_partial_update
+      description: |-
+        Reads and updates UserModel fields
+        Accepts GET, PUT, PATCH methods.
+
+        Default accepted fields: username, first_name, last_name
+        Default display fields: pk, username, email, first_name, last_name
+        Read-only fields: pk, email
+
+        Returns UserModel fields.
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserDetails'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUserDetails'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUserDetails'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDetails'
+          description: ''
+  /api/users/me/addresses/:
+    get:
+      operationId: users_me_addresses_list
+      description: List or create saved addresses belonging to the current user.
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedUserAddressList'
+          description: ''
+    post:
+      operationId: users_me_addresses_create
+      description: List or create saved addresses belonging to the current user.
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserAddress'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserAddress'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserAddress'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAddress'
+          description: ''
+  /api/users/me/addresses/{id}/:
+    get:
+      operationId: users_me_addresses_retrieve
+      description: Retrieve, update, or delete one of the current user's addresses.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAddress'
+          description: ''
+    put:
+      operationId: users_me_addresses_update
+      description: Retrieve, update, or delete one of the current user's addresses.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserAddress'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserAddress'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserAddress'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAddress'
+          description: ''
+    patch:
+      operationId: users_me_addresses_partial_update
+      description: Retrieve, update, or delete one of the current user's addresses.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserAddress'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUserAddress'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUserAddress'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAddress'
+          description: ''
+    delete:
+      operationId: users_me_addresses_destroy
+      description: Retrieve, update, or delete one of the current user's addresses.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/auth/token/:
+    post:
+      operationId: v1_auth_token_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenObtainPair'
+          description: ''
+  /api/v1/auth/token/refresh/:
+    post:
+      operationId: v1_auth_token_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /api/v1/auth/token/verify/:
+    post:
+      operationId: v1_auth_token_verify_create
+      description: |-
+        Takes a token and indicates if it is valid.  This view provides no
+        information about a token's fitness for a particular use.
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenVerify'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenVerify'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenVerify'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenVerify'
+          description: ''
+  /api/v1/health/:
+    get:
+      operationId: v1_health_retrieve
+      description: Basic application health endpoint.
+      tags:
+      - v1
+      security:
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/variants/:
+    get:
+      operationId: variants_list
+      description: Administrative variant CRUD.
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - variants
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedProductVariantList'
+          description: ''
+    post:
+      operationId: variants_create
+      description: Administrative variant CRUD.
+      tags:
+      - variants
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductVariant'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProductVariant'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProductVariant'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductVariant'
+          description: ''
+  /api/variants/{id}/:
+    get:
+      operationId: variants_retrieve
+      description: Administrative variant CRUD.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this product variant.
+        required: true
+      tags:
+      - variants
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductVariant'
+          description: ''
+    put:
+      operationId: variants_update
+      description: Administrative variant CRUD.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this product variant.
+        required: true
+      tags:
+      - variants
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductVariant'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProductVariant'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProductVariant'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductVariant'
+          description: ''
+    patch:
+      operationId: variants_partial_update
+      description: Administrative variant CRUD.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this product variant.
+        required: true
+      tags:
+      - variants
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProductVariant'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedProductVariant'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedProductVariant'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductVariant'
+          description: ''
+    delete:
+      operationId: variants_destroy
+      description: Administrative variant CRUD.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this product variant.
+        required: true
+      tags:
+      - variants
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+components:
+  schemas:
+    AudienceEnum:
+      enum:
+      - men
+      - women
+      - kids
+      - unisex
+      type: string
+      description: |-
+        * `men` - Men
+        * `women` - Women
+        * `kids` - Kids
+        * `unisex` - Unisex
+    CategoryTree:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 120
+        slug:
+          oneOf:
+          - type: string
+            maxLength: 150
+            pattern: ^[-a-zA-Z0-9_]+$
+          - type: string
+            maxLength: 0
+        description:
+          type: string
+        image:
+          type: string
+          format: uri
+          nullable: true
+        parent:
+          type: string
+          readOnly: true
+        children:
+          type: array
+          items: {}
+          readOnly: true
+      required:
+      - children
+      - id
+      - name
+      - parent
+    CategoryWrite:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 120
+        slug:
+          oneOf:
+          - type: string
+            pattern: ^[-a-zA-Z0-9_]+$
+          - type: string
+            maxLength: 0
+        description:
+          type: string
+        image:
+          type: string
+          format: uri
+          nullable: true
+        parent:
+          type: string
+          nullable: true
+        is_active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - name
+      - updated_at
+    CustomLogin:
+      type: object
+      description: Require email confirmation before issuing customer JWTs.
+      properties:
+        username:
+          type: string
+        email:
+          oneOf:
+          - type: string
+            format: email
+          - type: string
+            maxLength: 0
+        password:
+          type: string
+      required:
+      - password
+    CustomRegister:
+      type: object
+      description: Registration serializer that creates customer accounts only.
+      properties:
+        email:
+          type: string
+          format: email
+        password1:
+          type: string
+          writeOnly: true
+        password2:
+          type: string
+          writeOnly: true
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        phone_number:
+          type: string
+          maxLength: 30
+        address:
+          type: string
+          maxLength: 255
+      required:
+      - email
+      - password1
+      - password2
+    LogoutSchema:
+      type: object
+      properties:
+        refresh:
+          type: string
+          description: The refresh token to blacklist.
+      required:
+      - refresh
+    PaginatedCategoryTreeList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/CategoryTree'
+    PaginatedProductImageList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductImage'
+    PaginatedProductListList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductList'
+    PaginatedProductVariantList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductVariant'
+    PaginatedUserAddressList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserAddress'
+    PasswordReset:
+      type: object
+      description: Serializer for requesting a password reset e-mail.
+      properties:
+        email:
+          type: string
+          format: email
+      required:
+      - email
+    PasswordResetConfirm:
+      type: object
+      description: Serializer for confirming a password reset attempt.
+      properties:
+        new_password1:
+          type: string
+          maxLength: 128
+        new_password2:
+          type: string
+          maxLength: 128
+        uid:
+          type: string
+        token:
+          type: string
+      required:
+      - new_password1
+      - new_password2
+      - token
+      - uid
+    PatchedCategoryWrite:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 120
+        slug:
+          oneOf:
+          - type: string
+            pattern: ^[-a-zA-Z0-9_]+$
+          - type: string
+            maxLength: 0
+        description:
+          type: string
+        image:
+          type: string
+          format: uri
+          nullable: true
+        parent:
+          type: string
+          nullable: true
+        is_active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedProductImage:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        product:
+          type: string
+        image:
+          type: string
+          format: uri
+        alt_text:
+          type: string
+          maxLength: 255
+        is_primary:
+          type: boolean
+        order:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+    PatchedProductVariant:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        product:
+          type: string
+        size:
+          allOf:
+          - $ref: '#/components/schemas/SizeEnum'
+          default: M
+        color:
+          type: string
+          maxLength: 60
+        color_hex_code:
+          oneOf:
+          - type: string
+            pattern: ^#[0-9a-fA-F]{6}$
+            maxLength: 7
+          - type: string
+            maxLength: 0
+        stock_quantity:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        sku:
+          type: string
+          maxLength: 64
+        additional_price:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          description: Additional price in kobo above the product price.
+        current_price:
+          type: integer
+          readOnly: true
+        is_low_stock:
+          type: boolean
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedProductWrite:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+        slug:
+          oneOf:
+          - type: string
+            pattern: ^[-a-zA-Z0-9_]+$
+          - type: string
+            maxLength: 0
+        description:
+          type: string
+          description: Product description. Treat stored text as plain text.
+        category:
+          type: string
+        audience:
+          $ref: '#/components/schemas/AudienceEnum'
+        brand:
+          type: string
+          maxLength: 120
+        base_price:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 1
+          format: int64
+          description: Price in kobo. ₦1,000.00 = 100000 kobo.
+        discount_price:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 1
+          format: int64
+          nullable: true
+          description: Optional discounted price in kobo.
+        is_active:
+          type: boolean
+        is_featured:
+          type: boolean
+        tags:
+          type: array
+          items:
+            type: string
+            maxLength: 50
+          maxItems: 30
+        sales_count:
+          type: integer
+          readOnly: true
+          description: Internal popularity counter maintained by the order workflow.
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedUserAddress:
+      type: object
+      description: Serialize a customer's saved addresses without exposing ownership
+        control.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          type: integer
+          readOnly: true
+        label:
+          type: string
+          maxLength: 50
+        recipient_name:
+          type: string
+          maxLength: 150
+        phone_number:
+          type: string
+          maxLength: 30
+        address_line_1:
+          type: string
+          maxLength: 255
+        address_line_2:
+          type: string
+          maxLength: 255
+        city:
+          type: string
+          maxLength: 100
+        state:
+          type: string
+          maxLength: 100
+        postal_code:
+          type: string
+          maxLength: 20
+        country:
+          type: string
+          maxLength: 100
+        is_default:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedUserDetails:
+      type: object
+      description: Expose safe profile fields while keeping security fields read-only.
+      properties:
+        pk:
+          type: integer
+          readOnly: true
+          title: ID
+        email:
+          type: string
+          format: email
+          readOnly: true
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        phone_number:
+          type: string
+          maxLength: 30
+        address:
+          type: string
+          maxLength: 255
+        role:
+          allOf:
+          - $ref: '#/components/schemas/RoleEnum'
+          readOnly: true
+        is_verified:
+          type: boolean
+          readOnly: true
+        date_joined:
+          type: string
+          format: date-time
+          readOnly: true
+    ProductDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+        slug:
+          oneOf:
+          - type: string
+            maxLength: 220
+            pattern: ^[-a-zA-Z0-9_]+$
+          - type: string
+            maxLength: 0
+        category:
+          type: string
+          readOnly: true
+        audience:
+          $ref: '#/components/schemas/AudienceEnum'
+        brand:
+          type: string
+          maxLength: 120
+        base_price:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 1
+          format: int64
+          description: Price in kobo. ₦1,000.00 = 100000 kobo.
+        discount_price:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 1
+          format: int64
+          nullable: true
+          description: Optional discounted price in kobo.
+        current_price:
+          type: integer
+          readOnly: true
+        is_featured:
+          type: boolean
+        tags:
+          description: A JSON list of tags, e.g. ['ankara', 'occasion'].
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        primary_image:
+          type: string
+          nullable: true
+          readOnly: true
+        average_rating:
+          type: number
+          format: double
+          readOnly: true
+          nullable: true
+        review_count:
+          type: integer
+          readOnly: true
+        description:
+          type: string
+          readOnly: true
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductImage'
+          readOnly: true
+        variants:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductVariant'
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - average_rating
+      - base_price
+      - category
+      - created_at
+      - current_price
+      - description
+      - id
+      - images
+      - name
+      - primary_image
+      - review_count
+      - updated_at
+      - variants
+    ProductImage:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        product:
+          type: string
+        image:
+          type: string
+          format: uri
+        alt_text:
+          type: string
+          maxLength: 255
+        is_primary:
+          type: boolean
+        order:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+      required:
+      - id
+      - image
+      - product
+    ProductList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+        slug:
+          oneOf:
+          - type: string
+            maxLength: 220
+            pattern: ^[-a-zA-Z0-9_]+$
+          - type: string
+            maxLength: 0
+        category:
+          type: string
+          readOnly: true
+        audience:
+          $ref: '#/components/schemas/AudienceEnum'
+        brand:
+          type: string
+          maxLength: 120
+        base_price:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 1
+          format: int64
+          description: Price in kobo. ₦1,000.00 = 100000 kobo.
+        discount_price:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 1
+          format: int64
+          nullable: true
+          description: Optional discounted price in kobo.
+        current_price:
+          type: integer
+          readOnly: true
+        is_featured:
+          type: boolean
+        tags:
+          description: A JSON list of tags, e.g. ['ankara', 'occasion'].
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        primary_image:
+          type: string
+          nullable: true
+          readOnly: true
+        average_rating:
+          type: number
+          format: double
+          readOnly: true
+          nullable: true
+        review_count:
+          type: integer
+          readOnly: true
+      required:
+      - average_rating
+      - base_price
+      - category
+      - created_at
+      - current_price
+      - id
+      - name
+      - primary_image
+      - review_count
+    ProductVariant:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        product:
+          type: string
+        size:
+          allOf:
+          - $ref: '#/components/schemas/SizeEnum'
+          default: M
+        color:
+          type: string
+          maxLength: 60
+        color_hex_code:
+          oneOf:
+          - type: string
+            pattern: ^#[0-9a-fA-F]{6}$
+            maxLength: 7
+          - type: string
+            maxLength: 0
+        stock_quantity:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        sku:
+          type: string
+          maxLength: 64
+        additional_price:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          description: Additional price in kobo above the product price.
+        current_price:
+          type: integer
+          readOnly: true
+        is_low_stock:
+          type: boolean
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - color
+      - created_at
+      - current_price
+      - id
+      - is_low_stock
+      - product
+      - updated_at
+    ProductWrite:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+        slug:
+          oneOf:
+          - type: string
+            pattern: ^[-a-zA-Z0-9_]+$
+          - type: string
+            maxLength: 0
+        description:
+          type: string
+          description: Product description. Treat stored text as plain text.
+        category:
+          type: string
+        audience:
+          $ref: '#/components/schemas/AudienceEnum'
+        brand:
+          type: string
+          maxLength: 120
+        base_price:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 1
+          format: int64
+          description: Price in kobo. ₦1,000.00 = 100000 kobo.
+        discount_price:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 1
+          format: int64
+          nullable: true
+          description: Optional discounted price in kobo.
+        is_active:
+          type: boolean
+        is_featured:
+          type: boolean
+        tags:
+          type: array
+          items:
+            type: string
+            maxLength: 50
+          maxItems: 30
+        sales_count:
+          type: integer
+          readOnly: true
+          description: Internal popularity counter maintained by the order workflow.
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - base_price
+      - category
+      - created_at
+      - id
+      - name
+      - sales_count
+      - updated_at
+    ReviewCreate:
+      type: object
+      properties:
+        rating:
+          type: integer
+          maximum: 5
+          minimum: 1
+        title:
+          type: string
+          maxLength: 150
+        body:
+          type: string
+      required:
+      - body
+      - rating
+      - title
+    ReviewRead:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        reviewer_name:
+          type: string
+          readOnly: true
+        rating:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          readOnly: true
+        body:
+          type: string
+          readOnly: true
+        is_verified_purchase:
+          type: boolean
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - body
+      - created_at
+      - id
+      - is_verified_purchase
+      - rating
+      - reviewer_name
+      - title
+    RoleEnum:
+      enum:
+      - customer
+      - admin
+      - vendor
+      type: string
+      description: |-
+        * `customer` - Customer
+        * `admin` - Admin
+        * `vendor` - Vendor
+    SizeEnum:
+      enum:
+      - XS
+      - S
+      - M
+      - L
+      - XL
+      - XXL
+      - Custom
+      type: string
+      description: |-
+        * `XS` - XS
+        * `S` - S
+        * `M` - M
+        * `L` - L
+        * `XL` - XL
+        * `XXL` - XXL
+        * `Custom` - Custom
+    TokenObtainPair:
+      type: object
+      properties:
+        email:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          readOnly: true
+      required:
+      - access
+      - email
+      - password
+      - refresh
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+      required:
+      - access
+      - refresh
+    TokenVerify:
+      type: object
+      properties:
+        token:
+          type: string
+          writeOnly: true
+      required:
+      - token
+    UserAddress:
+      type: object
+      description: Serialize a customer's saved addresses without exposing ownership
+        control.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          type: integer
+          readOnly: true
+        label:
+          type: string
+          maxLength: 50
+        recipient_name:
+          type: string
+          maxLength: 150
+        phone_number:
+          type: string
+          maxLength: 30
+        address_line_1:
+          type: string
+          maxLength: 255
+        address_line_2:
+          type: string
+          maxLength: 255
+        city:
+          type: string
+          maxLength: 100
+        state:
+          type: string
+          maxLength: 100
+        postal_code:
+          type: string
+          maxLength: 20
+        country:
+          type: string
+          maxLength: 100
+        is_default:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - address_line_1
+      - city
+      - created_at
+      - id
+      - phone_number
+      - recipient_name
+      - state
+      - updated_at
+      - user
+    UserDetails:
+      type: object
+      description: Expose safe profile fields while keeping security fields read-only.
+      properties:
+        pk:
+          type: integer
+          readOnly: true
+          title: ID
+        email:
+          type: string
+          format: email
+          readOnly: true
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        phone_number:
+          type: string
+          maxLength: 30
+        address:
+          type: string
+          maxLength: 255
+        role:
+          allOf:
+          - $ref: '#/components/schemas/RoleEnum'
+          readOnly: true
+        is_verified:
+          type: boolean
+          readOnly: true
+        date_joined:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - date_joined
+      - email
+      - is_verified
+      - pk
+      - role
+    VerifyEmail:
+      type: object
+      properties:
+        key:
+          type: string
+          writeOnly: true
+      required:
+      - key
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
