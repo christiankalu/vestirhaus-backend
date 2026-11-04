@@ -10,6 +10,8 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
 )
 
+from core.views import csrf_cookie
+
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularRedocView,
@@ -32,7 +34,9 @@ urlpatterns = [
     path("api/", include("products.urls")),
     path("api/", include("orders.urls")),
     path("api/payments/", include("payments.urls")),
-
+    path("api/", include("wishlist.urls")),
+    path("api/admin/", include("admin_panel.urls")),
+    path("api/csrf/", csrf_cookie, name="csrf-cookie"),
     path("api/v1/health/", HealthCheckView.as_view(), name="health-check"),
 
     path(

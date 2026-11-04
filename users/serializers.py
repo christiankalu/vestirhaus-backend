@@ -92,29 +92,24 @@ class CustomRegisterSerializer(BaseRegisterSerializer):
 
 
 class CustomLoginSerializer(BaseLoginSerializer):
-    """Require email confirmation before issuing customer JWTs."""
+    """
+    Require email verification for customers.
 
-    def validate(self, attrs):
-        attrs = super().validate(attrs)
-        user = attrs["user"]
+    Trusted Django staff and superusers may access
+    the administration system without email confirmation.
+    """
 
-        # Allow trusted Django staff accounts to access administration.
-        if not (user.is_staff or user.is_superuser):
-            verified_email_exists = user.emailaddress_set.filter(
-                email__iexact=user.email,
-                verified=True,
-            ).exists()
+    @staticmethod
+    def validate_email_verification_status(user, email=None):
+        # Staff accounts are trusted through Django's staff permissions.
+        if user.is_staff or user.is_superuser:
+            return
 
-            if not verified_email_exists:
-                raise serializers.ValidationError(
-                    {
-                        "email": (
-                            "Please verify your email address before logging in."
-                        )
-                    }
-                )
-
-        return attrs
+        # Normal customers must pass Allauth email verification.
+        return BaseLoginSerializer.validate_email_verification_status(
+            user,
+            email=email,
+        )
 
 
 class UserDetailsSerializer(BaseUserDetailsSerializer):
@@ -130,6 +125,7 @@ class UserDetailsSerializer(BaseUserDetailsSerializer):
             "address",
             "role",
             "is_verified",
+            "is_staff",
             "date_joined",
         )
         read_only_fields = (
@@ -137,6 +133,7 @@ class UserDetailsSerializer(BaseUserDetailsSerializer):
             "email",
             "role",
             "is_verified",
+            "is_staff",
             "date_joined",
         )
 

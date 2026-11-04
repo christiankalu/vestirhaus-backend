@@ -3,6 +3,7 @@ from django.conf import settings
 from django.shortcuts import redirect
 from django.urls import path, re_path
 from django.views.generic import TemplateView
+from dj_rest_auth.registration.views import ResendEmailVerificationView
 
 from .views import (
     ForgotPasswordView,
@@ -54,6 +55,12 @@ urlpatterns = [
         "auth/reset-password/",
         ResetPasswordView.as_view(),
         name="auth-reset-password",
+    ),
+    
+    path(
+        "auth/resend-email/",
+        ResendEmailVerificationView.as_view(),
+        name="rest_resend_email",
     ),
 
     # Authenticated user profile

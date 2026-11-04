@@ -1,6 +1,6 @@
 
 from decouple import Csv, config
-
+import dj_database_url
 from .base import *
 
 
@@ -30,6 +30,15 @@ if not CORS_ALLOWED_ORIGINS:
 
 if not CSRF_TRUSTED_ORIGINS:
     raise ValueError("CSRF_TRUSTED_ORIGINS must be configured.")
+
+
+DATABASES = {
+    "default": dj_database_url.config(
+        default=config("DATABASE_PUBLIC_URL"),
+        conn_max_age=600,
+        ssl_require=True,
+    )
+}
 
 
 SECURE_SSL_REDIRECT = True

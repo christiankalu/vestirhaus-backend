@@ -1,5 +1,4 @@
 from django.urls import include, path
-from rest_framework.routers import DefaultRouter
 
 from .views import (
     AdminOrderViewSet,
@@ -14,13 +13,6 @@ from .views import (
 )
 
 
-router = DefaultRouter()
-router.register(
-    "admin/orders",
-    AdminOrderViewSet,
-    basename="admin-order",
-)
-
 urlpatterns = [
     # Guest and customer cart
     path("cart/csrf/", CartCSRFView.as_view(), name="cart-csrf"),
@@ -34,6 +26,4 @@ urlpatterns = [
     path("orders/<int:order_id>/", OrderDetailView.as_view(), name="order-detail"),
     path("orders/", OrderListView.as_view(), name="order-list"),
 
-    # Administrative order listing and status updates
-    path("", include(router.urls)),
 ]

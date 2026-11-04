@@ -29,6 +29,7 @@ class IsPlatformAdmin(BasePermission):
             and (
                 user.role == User.Role.ADMIN
                 or user.is_superuser
+                or user.is_staff
             )
         )
 

@@ -55,6 +55,8 @@ LOCAL_APPS = [
     "orders",
     "payments",
     "core",
+    "wishlist",
+    "admin_panel",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -69,11 +71,10 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "django.contrib.auth.middleware.AuthenticationMiddleware",
     "allauth.account.middleware.AccountMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
 
@@ -216,9 +217,7 @@ STORAGES = {
         ),
     },
     "staticfiles": {
-        "BACKEND": (
-            "django.contrib.staticfiles.storage.StaticFilesStorage"
-        ),
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
 
@@ -279,28 +278,11 @@ SPECTACULAR_SETTINGS = {
 # JWT configuration.
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(
-        minutes=config(
-            "JWT_ACCESS_TOKEN_MINUTES",
-            default=15,
-            cast=int,
-        )
+        minutes=config("JWT_ACCESS_TOKEN_MINUTES", default=15, cast=int)
     ),
     "REFRESH_TOKEN_LIFETIME": timedelta(
-        days=config(
-            "JWT_REFRESH_TOKEN_DAYS",
-            default=7,
-            cast=int,
-        )
+        days=config("JWT_REFRESH_TOKEN_DAYS", default=7, cast=int)
     ),
-    "AUTH_HEADER_TYPES": ("Bearer",),
-    "ROTATE_REFRESH_TOKENS": True,
-    "BLACKLIST_AFTER_ROTATION": True,
-}
-
-
-SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
     "AUTH_HEADER_TYPES": ("Bearer",),
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
@@ -339,13 +321,15 @@ CHECKOUT_SHIPPING_FEE_KOBO = config(
 # Guest carts use Django sessions and require cross-origin credentials.
 CORS_ALLOW_CREDENTIALS = True
 
+CSRF_COOKIE_NAME = "csrftoken"
+CSRF_COOKIE_HTTPONLY = False
+
+CSRF_COOKIE_SAMESITE = "Lax"
+SESSION_COOKIE_SAMESITE = "Lax"
+
 
 # Email backend defaults to the console during development.
 # Production should configure a real email service.
-EMAIL_BACKEND = config(
-    "EMAIL_BACKEND",
-    default="django.core.mail.backends.console.EmailBackend",
-)
 DEFAULT_FROM_EMAIL = config(
     "DEFAULT_FROM_EMAIL",
     default="noreply@aso.example",

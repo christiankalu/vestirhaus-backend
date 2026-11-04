@@ -15,9 +15,13 @@ build/
 dist/
 
 # Virtual environments
-.venv/
+.env
+.env.*
+!.env.example
 venv/
-env/
+__pycache__/
+*.py[cod]
+staticfiles/
 
 # Django
 *.log
