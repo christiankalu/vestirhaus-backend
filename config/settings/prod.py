@@ -6,7 +6,7 @@ from .base import *
 
 DEBUG = False
 
-DATABASE_URL = config("DATABASE_PUBLIC_URL")
+DATABASE_URL = config("DATABASE_URL").strip()
 
 # Require these values in production instead of using development defaults.
 ALLOWED_HOSTS = config(
