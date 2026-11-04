@@ -6,6 +6,8 @@ from .base import *
 
 DEBUG = False
 
+DATABASE_URL = config("DATABASE_PUBLIC_URL")
+
 # Require these values in production instead of using development defaults.
 ALLOWED_HOSTS = config(
     "DJANGO_ALLOWED_HOSTS",
@@ -33,10 +35,9 @@ if not CSRF_TRUSTED_ORIGINS:
 
 
 DATABASES = {
-    "default": dj_database_url.config(
-        default=config("DATABASE_PUBLIC_URL"),
+    "default": dj_database_url.parse(
+        DATABASE_URL,
         conn_max_age=600,
-        ssl_require=True,
     )
 }
 
